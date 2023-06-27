@@ -1,25 +1,38 @@
 <?php
-namespace BVSDK\BvSdk;
 
-<<<<<<< HEAD
-use Box\Spout\Exceptions\SDKInitException;
+namespace BVSDK\BvSdk\Traits;
+
+use BVSDK\BvSdk\Exceptions\MethodDoesNotExists;
+use BVSDK\BvSdk\Exceptions\SDKInitException;
 use BVSDK\BvSdk\API\ApiSDKInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
-class ApiSDK implements ApiSDKInterface
+trait ApiSdkTrait
 {
     private static $apiBaseUrl;
     private static $apiToken;
     private static $client;
     private static $contentType;
+    private static $methodMap = [
+        'create' => '_createResource',
+        'update' => '_updateResource',
+        'delete' => '_deleteResource',
+        'read' => '_getResource',
+
+    ];
+
+    private function __construct(){}
 
     public static function init($baseUrl, $apiToken, $contentType = 'application/json', array $additionalParams = [])
     {
+        ini_set('xdebug.remote_connect_back', 1);
         static::$apiBaseUrl = $baseUrl;
         static::$apiToken = $apiToken;
         static::$contentType = $contentType;
         static::$client = new Client();
+
+        return new self();
     }
 
     public static function __callStatic($method, $args)
@@ -28,11 +41,17 @@ class ApiSDK implements ApiSDKInterface
             throw new SDKInitException('Client has not been initialized. Call init method before');
         }
 
-        return call_user_func_array(static::$method, $args);
+        $realMethod = static::$methodMap[$method] ?? false;
+        if (!$realMethod) {
+            throw new MethodDoesNotExists('Method: ' . $method . ' does not exists');
+        }
+
+        return call_user_func_array([self::class, $realMethod], $args);
     }
 
-    public static function createResource($resourcePath, $data, $httpMethod = 'post', array $sendData = [])
+    private static function _createResource($resourcePath, $data, $httpMethod = 'post', array $sendData = [])
     {
+        ini_set('xdebug.remote_connect_back', 1);
         $url = static::getApiUrl($resourcePath);
         $sendData['headers'] = $sendData['headers'] ?? [];
         $sendData['headers']['Content-Type'] = static::$contentType;
@@ -46,27 +65,10 @@ class ApiSDK implements ApiSDKInterface
         } catch (RequestException $e) {
             throw new \Exception('API request failed: ' . $e->getMessage());
         }
-=======
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-
-use BVSDK\BvSdk\Traits\ApiSdkTrait;
-use BVSDK\BvSdk\API\ApiSDKInterface;
-use BVSDK\BvSdk\Exceptions\SDKInitException;
-
-class ApiSDK implements ApiSDKInterface
-{
-   use ApiSdkTrait;
-   
-    public static function createResource($resourcePath, $data, $httpMethod = 'post', array $sendData = [])
-    {
-        return self::create($resourcePath, $data, $httpMethod, $sendData);
->>>>>>> a8c682e (v1.0.2)
     }
 
-    public static function getResource($resourcePath, $id, $httpMethod = 'get', $sendData = [])
+    private static function _getResource($resourcePath, $id, $httpMethod = 'get', $sendData = [])
     {
-<<<<<<< HEAD
         $url = static::getApiUrl($resourcePath) . $id;
         $sendData['headers'] = $sendData['headers'] ?? [];
         $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
@@ -78,14 +80,10 @@ class ApiSDK implements ApiSDKInterface
         } catch (RequestException $e) {
             throw new \Exception('API request failed: ' . $e->getMessage());
         }
-=======
-        return self::read($resourcePath, $id, $httpMethod, $sendData);
->>>>>>> a8c682e (v1.0.2)
     }
 
-    public static function updateResource($resourcePath, $id, $data, $httpMethod = 'put', array $sendData = [])
+    private static function _updateResource($resourcePath, $id, $data, $httpMethod = 'put', array $sendData = [])
     {
-<<<<<<< HEAD
         $url = static::getApiUrl($resourcePath) . $id;
 
         $sendData['headers'] = $data['headers'] ?? [];
@@ -100,14 +98,10 @@ class ApiSDK implements ApiSDKInterface
         } catch (RequestException $e) {
             throw new \Exception('API request failed: ' . $e->getMessage());
         }
-=======
-        return self::update($resourcePath, $id, $data, $httpMethod, $sendData);
->>>>>>> a8c682e (v1.0.2)
     }
 
-    public static function deleteResource($resourcePath, $id, $httpMethod = 'delete', array $sendData = [])
+    private static function _deleteResource($resourcePath, $id, $httpMethod = 'delete', array $sendData = [])
     {
-<<<<<<< HEAD
         $url = static::getApiUrl($resourcePath) . $id;
         $sendData['headers'] = $sendData['headers'] ?? [];
         $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
@@ -123,9 +117,6 @@ class ApiSDK implements ApiSDKInterface
 
     private static function getApiUrl($resourcePath)
     {
-       return rtrim(static::$apiBaseUrl, '/') . '/' . trim($resourcePath, '/') . '/';
-=======
-        return self::delete($resourcePath, $id, $httpMethod, $sendData);
->>>>>>> a8c682e (v1.0.2)
+       return rtrim(static::$apiBaseUrl, '/') . '/' . trim($resourcePath, '/');
     }
 }
