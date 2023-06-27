@@ -21,6 +21,6 @@
             "BVSDK\\BvSdk\\": "src/BvSdk"
         }
     },
-    "version": "v1.0.1",
+    "version": "v1.0.2",
     "minimum-stability": "dev"
 }
