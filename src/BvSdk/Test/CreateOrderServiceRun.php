@@ -24,13 +24,9 @@ class CreateOrderServiceRun
         $orderAddress = new OrderAddress(new AttributeMapperTest());
         $orderAddress->setData(FakerSalesOrderHeaderData::generateFakeDataOrderAddress());
 
-<<<<<<< HEAD
-        ApiSDK::init('http://localhost:8000/api/', 'fDx7MZccntnmzNB3RePsCHkY4RGSdnG5mQxOuG3U');
-=======
         $apiSDK = ApiSDK::init('http://127.0.0.1:8000/api/', 'fDx7MZccntnmzNB3RePsCHkY4RGSdnG5mQxOuG3U');
         OrderService::initInstance($apiSDK);
-
->>>>>>> a8c682e (v1.0.2)
+        
         OrderService::setOrderAddress($orderAddress);
         OrderService::setSalesOrderHeader($salesOrderHeader);
         OrderService::addSalesOrderDetail($salesOrderDetail1);

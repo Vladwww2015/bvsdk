@@ -1,11 +1,8 @@
 <?php
 namespace BVSDK\BvSdk\Services;
 
-<<<<<<< HEAD
-use Box\Spout\Exceptions\SDKInitException;
-=======
+
 use BVSDK\BvSdk\Exceptions\SDKInitException;
->>>>>>> a8c682e (v1.0.2)
 use BVSDK\BvSdk\API\ApiSDKInterface;
 use BVSDK\BvSdk\Entities\OrderAddress;
 use BVSDK\BvSdk\Entities\SalesOrderDetail;
@@ -67,26 +64,16 @@ class OrderService
             throw new SDKInitException('Incorrect data. Please check data for order address, order header and order details');
         }
         $data = [];
-<<<<<<< HEAD
-        $data['order_details'] = [];
-=======
+
         $data['order_detail'] = [];
->>>>>>> a8c682e (v1.0.2)
         $data['order_header'] = static::$_salesOrderHeader->mapToBv();
         $data['order_address'] = static::$_orderAddress->mapToBv();
 
         array_map(function($item) use (&$data) {
-<<<<<<< HEAD
-            $data['order_details'][] = $item->mapToBv();
-        }, static::$_salesOrderDetails);
-
-        static::$apiSDK::createResource('create-order', $data);
-=======
             $data['order_detail'][] = $item->mapToBv();
         }, static::$_salesOrderDetails);
 
         static::$apiSDK->createResource('create-order', $data);
->>>>>>> a8c682e (v1.0.2)
 
         self::resetData();
     }
