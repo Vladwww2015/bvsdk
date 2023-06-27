@@ -22,7 +22,11 @@ class OrderService
 
     public static function initInstance(ApiSDKInterface $apiSDK = null) {
         if (!self::$instance) {
+<<<<<<< HEAD
             self::$instance = new self::class;
+=======
+            self::$instance = self::class;
+>>>>>>> d13f581 (Tmp)
             self::$apiSDK = $apiSDK;
         }
 
@@ -65,7 +69,13 @@ class OrderService
         $data['order_details'] = [];
         $data['order_header'] = static::$_salesOrderHeader->mapToBv();
         $data['order_address'] = static::$_orderAddress->mapToBv();
+<<<<<<< HEAD
         array_map(fn($item) => $data['order_details'][] = $item->mapToBv(),static::$_salesOrderDetails);
+=======
+        array_map(function($item) use (&$data) {
+            $data['order_details'][] = $item->mapToBv();
+        }, static::$_salesOrderDetails);
+>>>>>>> d13f581 (Tmp)
 
         static::$apiSDK::createResource('create-order', $data);
 

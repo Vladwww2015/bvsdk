@@ -12,6 +12,14 @@ abstract class AbstractEntity implements AttributeMapperInterface, EntityInterfa
      */
     protected $attributeMapper;
 
+<<<<<<< HEAD
+=======
+    /**
+     * @var array
+     */
+    protected $_data = [];
+
+>>>>>>> d13f581 (Tmp)
     public function __construct(AttributeMapperInterface $attributeMapper)
     {
         $this->attributeMapper = $attributeMapper;
@@ -26,4 +34,26 @@ abstract class AbstractEntity implements AttributeMapperInterface, EntityInterfa
     {
         return $this->attributeMapper->mapFromBV($this);
     }
+<<<<<<< HEAD
+=======
+
+    public function setData(array $data)
+    {
+        $this->_data = $data;
+
+        return $this;
+    }
+
+    public function getData(string $key = null)
+    {
+        return $key ? ($this->_data[$key] ?? null) : $this->_data;
+    }
+
+    public function addData(string $key, $value)
+    {
+        $this->_data[$key] = $value;
+
+        return $this;
+    }
+>>>>>>> d13f581 (Tmp)
 }

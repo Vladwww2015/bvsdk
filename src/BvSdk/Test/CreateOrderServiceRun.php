@@ -16,10 +16,17 @@ class CreateOrderServiceRun
         $salesOrderHeader->setData(FakerSalesOrderHeaderData::generateFakeDataSalesOrderHeader());
 
         $salesOrderDetail1 = new SalesOrderDetail(new AttributeMapperTest());
+<<<<<<< HEAD
         $salesOrderDetail1->setData(FakerSalesOrderHeaderData::generateFakeDataSalesOrderDetails());
 
         $salesOrderDetail2 = new SalesOrderDetail(new AttributeMapperTest());
         $salesOrderDetail2->setData(FakerSalesOrderHeaderData::generateFakeDataSalesOrderDetails());
+=======
+        $salesOrderDetail1->setData(FakerSalesOrderHeaderData::generateFakeDataSalesOrderDetail());
+
+        $salesOrderDetail2 = new SalesOrderDetail(new AttributeMapperTest());
+        $salesOrderDetail2->setData(FakerSalesOrderHeaderData::generateFakeDataSalesOrderDetail());
+>>>>>>> d13f581 (Tmp)
 
         $orderAddress = new OrderAddress(new AttributeMapperTest());
         $orderAddress->setData(FakerSalesOrderHeaderData::generateFakeDataOrderAddress());

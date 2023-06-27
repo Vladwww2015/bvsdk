@@ -3,9 +3,14 @@ namespace BVSDK\BvSdk\Test;
 
 class FakerSalesOrderHeaderData
 {
+<<<<<<< HEAD
     public static function generateFakeDataSalesOrderDetails()
     {
         $salesOrderDetails = [];
+=======
+    public static function generateFakeDataSalesOrderDetail()
+    {
+>>>>>>> d13f581 (Tmp)
         $salesOrderDetail = [];
 
         $salesOrderDetail['NUMBER'] = self::generateRandomString(10);
@@ -83,9 +88,13 @@ class FakerSalesOrderHeaderData
         $salesOrderDetail['BVRVADDUSERINIT'] = self::generateRandomString(3);
         $salesOrderDetail['COMMENT'] = self::generateRandomString(512);
 
+<<<<<<< HEAD
         $salesOrderDetails[] = $salesOrderDetail;
 
         return $salesOrderDetails;
+=======
+        return $salesOrderDetail;
+>>>>>>> d13f581 (Tmp)
     }
 
     public static function generateFakeDataOrderAddress()
