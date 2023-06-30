@@ -1,6 +1,6 @@
 <?php
 
-namespace BVSDK\BvSdk\Test;
+namespace BVSDK\BvSdk\Test\CreateOrderServiceRun;
 
 use BVSDK\BvSdk\API\AttributeMapperInterface;
 use BVSDK\BvSdk\API\EntityInterface;

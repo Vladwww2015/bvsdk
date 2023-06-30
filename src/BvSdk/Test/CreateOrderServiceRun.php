@@ -8,9 +8,12 @@ use BVSDK\BvSdk\Entities\SalesOrderDetail;
 use BVSDK\BvSdk\Entities\SalesOrderHeader;
 use BVSDK\BvSdk\Services\OrderService;
 
+use BVSDK\BvSdk\Test\CreateOrderServiceRun\AttributeMapperTest;
+use BVSDK\BvSdk\Test\CreateOrderServiceRun\FakerSalesOrderHeaderData;
+
 class CreateOrderServiceRun
 {
-    public function create()
+    public function create($apiUrl, $apiToken)
     {
         $salesOrderHeader = new SalesOrderHeader(new AttributeMapperTest());
         $salesOrderHeader->setData(FakerSalesOrderHeaderData::generateFakeDataSalesOrderHeader());
@@ -24,9 +27,9 @@ class CreateOrderServiceRun
         $orderAddress = new OrderAddress(new AttributeMapperTest());
         $orderAddress->setData(FakerSalesOrderHeaderData::generateFakeDataOrderAddress());
 
-        $apiSDK = ApiSDK::init('http://127.0.0.1:8000/api/', 'fDx7MZccntnmzNB3RePsCHkY4RGSdnG5mQxOuG3U');
+        $apiSDK = ApiSDK::init($apiUrl, $apiToken);
         OrderService::initInstance($apiSDK);
-        
+
         OrderService::setOrderAddress($orderAddress);
         OrderService::setSalesOrderHeader($salesOrderHeader);
         OrderService::addSalesOrderDetail($salesOrderDetail1);

@@ -26,7 +26,6 @@ trait ApiSdkTrait
 
     public static function init($baseUrl, $apiToken, $contentType = 'application/json', array $additionalParams = [])
     {
-        ini_set('xdebug.remote_connect_back', 1);
         static::$apiBaseUrl = $baseUrl;
         static::$apiToken = $apiToken;
         static::$contentType = $contentType;
@@ -49,41 +48,44 @@ trait ApiSdkTrait
         return call_user_func_array([self::class, $realMethod], $args);
     }
 
-    private static function _createResource($resourcePath, $data, $httpMethod = 'post', array $sendData = [])
-    {
-        ini_set('xdebug.remote_connect_back', 1);
+    private static function _createResource(
+        $resourcePath,
+        $data,
+        $httpMethod = 'post',
+        array $sendData = [],
+        \Closure $callback = null
+    ) {
         $url = static::getApiUrl($resourcePath);
         $sendData['headers'] = $sendData['headers'] ?? [];
         $sendData['headers']['Content-Type'] = static::$contentType;
         $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
         $sendData['json'] = $data;
 
-        try {
-            $response = static::$client->$httpMethod($url, $sendData);
-
-            return $response->getBody()->getContents();
-        } catch (RequestException $e) {
-            throw new \Exception('API request failed: ' . $e->getMessage());
-        }
+        return static::_sendRequest($url, $sendData, $httpMethod, $callback);
     }
 
-    private static function _getResource($resourcePath, $id, $httpMethod = 'get', $sendData = [])
-    {
+    private static function _getResource(
+        $resourcePath,
+        $id = '',
+        $httpMethod = 'get',
+        $sendData = [],
+        \Closure $callback = null
+    ) {
         $url = static::getApiUrl($resourcePath) . $id;
         $sendData['headers'] = $sendData['headers'] ?? [];
         $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
 
-        try {
-            $response = static::$client->$httpMethod($url, $sendData);
-
-            return $response->getBody()->getContents();
-        } catch (RequestException $e) {
-            throw new \Exception('API request failed: ' . $e->getMessage());
-        }
+        return static::_sendRequest($url, $sendData, $httpMethod, $callback);
     }
 
-    private static function _updateResource($resourcePath, $id, $data, $httpMethod = 'put', array $sendData = [])
-    {
+    private static function _updateResource(
+        $resourcePath,
+        $data,
+        $id = '',
+        $httpMethod = 'put',
+        array $sendData = [],
+        \Closure $callback = null
+    ) {
         $url = static::getApiUrl($resourcePath) . $id;
 
         $sendData['headers'] = $data['headers'] ?? [];
@@ -91,25 +93,33 @@ trait ApiSdkTrait
         $sendData['headers']['Content-Type'] = static::$contentType;
         $sendData['json'] = $data;
 
-        try {
-            $response = static::$client->$httpMethod($url, $sendData);
-
-            return $response->getBody()->getContents();
-        } catch (RequestException $e) {
-            throw new \Exception('API request failed: ' . $e->getMessage());
-        }
+        return static::_sendRequest($url, $sendData, $httpMethod, $callback);
     }
 
-    private static function _deleteResource($resourcePath, $id, $httpMethod = 'delete', array $sendData = [])
-    {
+    private static function _deleteResource(
+        $resourcePath,
+        $id = '',
+        $httpMethod = 'delete',
+        array $sendData = [],
+        \Closure $callback = null
+    ) {
         $url = static::getApiUrl($resourcePath) . $id;
         $sendData['headers'] = $sendData['headers'] ?? [];
         $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
 
-        try {
-            $response = static::$client->$httpMethod($url, $sendData);
+        return static::_sendRequest($url, $sendData, $httpMethod, $callback);
+    }
 
-            return $response->getBody()->getContents();
+    private static function _sendRequest($url, $sendData, $httpMethod, \Closure $callback = null)
+    {
+        try {
+            if(is_callable($callback)) {
+                $callback(static::$client->$httpMethod($url, $sendData));
+            } else {
+                $response = static::$client->$httpMethod($url, $sendData);
+
+                return $response->getBody()->getContents();
+            }
         } catch (RequestException $e) {
             throw new \Exception('API request failed: ' . $e->getMessage());
         }

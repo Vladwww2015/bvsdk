@@ -2,61 +2,43 @@
 namespace BVSDK\BvSdk\Services;
 
 
+use BVSDK\BvSdk\API\OrderAddressInterface;
+use BVSDK\BvSdk\API\SalesOrderDetailInterface;
+use BVSDK\BvSdk\API\SalesOrderHeaderInterface;
 use BVSDK\BvSdk\Exceptions\SDKInitException;
 use BVSDK\BvSdk\API\ApiSDKInterface;
 use BVSDK\BvSdk\Entities\OrderAddress;
 use BVSDK\BvSdk\Entities\SalesOrderDetail;
 use BVSDK\BvSdk\Entities\SalesOrderHeader;
 
-class OrderService
+class OrderService extends BaseService
 {
 
     private static $_salesOrderHeader;
     private static $_salesOrderDetails = [];
     private static $_orderAddress;
-    private static $apiSDK;
-
-    private static $instance;
 
 
-    private function __construct() {}
-
-    public static function initInstance(ApiSDKInterface $apiSDK = null) {
-        if (!self::$instance) {
-            self::$instance = self::class;
-
-            self::$apiSDK = $apiSDK;
-        }
-
-        return self::$instance;
-    }
-
-    public static function setSalesOrderHeader(SalesOrderHeader $salesOrderHeader)
+    public static function setSalesOrderHeader(SalesOrderHeaderInterface $salesOrderHeader)
     {
         static::$_salesOrderHeader = $salesOrderHeader;
 
         return self::$instance;
     }
 
-    public static function addSalesOrderDetail(SalesOrderDetail $salesOrderDetail)
+    public static function addSalesOrderDetail(SalesOrderDetailInterface $salesOrderDetail)
     {
         static::$_salesOrderDetails[] = $salesOrderDetail;
 
         return self::$instance;
     }
 
-    public static function setOrderAddress(OrderAddress $orderAddress)
+    public static function setOrderAddress(OrderAddressInterface $orderAddress)
     {
         static::$_orderAddress = $orderAddress;
 
         return self::$instance;
     }
-
-    public static function __callStatic($method, $args)
-    {
-        return call_user_func_array(static::$method, $args);
-    }
-
 
     public static function create()
     {
@@ -73,9 +55,11 @@ class OrderService
             $data['order_detail'][] = $item->mapToBv();
         }, static::$_salesOrderDetails);
 
-        static::$apiSDK->createResource('create-order', $data);
+        $result = static::$apiSDK->createResource('create-order', $data);
 
         self::resetData();
+
+        return $result;
     }
 
     public static function update()
