@@ -3,13 +3,13 @@
 namespace BVSDK\BvSdk\Test;
 
 use BVSDK\BvSdk\ApiSDK;
-use BVSDK\BvSdk\Services\GetOrderSchemaService;
+use BVSDK\BvSdk\Services\GetCustomerSchemaService;
 
-class GetOrderSchemaServiceRun extends AbstractGetSchemaServiceRun
+class GetCustomerSchemaServiceRun extends AbstractGetSchemaServiceRun
 {
     public static function get($apiUrl, $apiToken)
     {
         static::initInstance($apiUrl, $apiToken);
-        return GetOrderSchemaService::get();
+        return GetCustomerSchemaService::get();
     }
 }

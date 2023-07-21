@@ -11,9 +11,7 @@ use GuzzleHttp\Exception\RequestException;
 trait ApiSdkTrait
 {
     private static $apiBaseUrl;
-    private static $apiToken;
     private static $client;
-    private static $contentType;
     private static $methodMap = [
         'create' => '_createResource',
         'update' => '_updateResource',
@@ -24,12 +22,14 @@ trait ApiSdkTrait
 
     private function __construct(){}
 
-    public static function init($baseUrl, $apiToken, $contentType = 'application/json', array $additionalParams = [])
+    public static function init($baseUrl, $apiToken, $contentType = 'application/json', array $headers = ['Accept' => 'application/json'])
     {
         static::$apiBaseUrl = $baseUrl;
-        static::$apiToken = $apiToken;
-        static::$contentType = $contentType;
-        static::$client = new Client();
+        if(empty($headers['Authorization'])) {
+            $headers['Authorization'] = 'Bearer ' . $apiToken;
+        }
+        $headers['Content-Type'] = $contentType;
+        static::$client = new Client(['base_url' => $baseUrl, 'headers' => $headers]);
 
         return new self();
     }
@@ -50,64 +50,66 @@ trait ApiSdkTrait
 
     private static function _createResource(
         $resourcePath,
-        $data,
-        $httpMethod = 'post',
-        array $sendData = [],
+
+        array $data = [],
         \Closure $callback = null
     ) {
-        $url = static::getApiUrl($resourcePath);
-        $sendData['headers'] = $sendData['headers'] ?? [];
-        $sendData['headers']['Content-Type'] = static::$contentType;
-        $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
-        $sendData['json'] = $data;
-
+        $httpMethod = 'post';
+        $url = static::getApiUrlByHttpMethod($httpMethod, $resourcePath);
+        $sendData = [
+            'json' => $data
+        ];
+        
         return static::_sendRequest($url, $sendData, $httpMethod, $callback);
     }
 
     private static function _getResource(
         $resourcePath,
-        $id = '',
-        $httpMethod = 'get',
-        $sendData = [],
+        array $searchCriteriaParams = [],
         \Closure $callback = null
     ) {
-        $url = static::getApiUrl($resourcePath) . $id;
-        $sendData['headers'] = $sendData['headers'] ?? [];
-        $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
+        $httpMethod = 'get';
+        $url = static::getApiUrlByHttpMethod($httpMethod, $resourcePath, $searchCriteriaParams);
+        $requestData = [];
+        static::_prepareSearchCriteriaRequestData($requestData, $searchCriteriaParams);
 
-        return static::_sendRequest($url, $sendData, $httpMethod, $callback);
+
+        return static::_sendRequest($url, $requestData, $httpMethod, $callback);
     }
 
     private static function _updateResource(
         $resourcePath,
-        $data,
-        $id = '',
-        $httpMethod = 'put',
+        array $searchCriteriaParams = [],
         array $sendData = [],
         \Closure $callback = null
     ) {
-        $url = static::getApiUrl($resourcePath) . $id;
-
-        $sendData['headers'] = $data['headers'] ?? [];
-        $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
-        $sendData['headers']['Content-Type'] = static::$contentType;
-        $sendData['json'] = $data;
-
+        $httpMethod = 'put';
+        $requestData = [
+            'json' => [
+                'data' => $sendData
+            ]
+        ];
+        $url = static::getApiUrlByHttpMethod($httpMethod, $resourcePath);
+        static::_prepareSearchCriteriaRequestData($requestData, $searchCriteriaParams);
+        
         return static::_sendRequest($url, $sendData, $httpMethod, $callback);
     }
 
     private static function _deleteResource(
         $resourcePath,
-        $id = '',
-        $httpMethod = 'delete',
-        array $sendData = [],
+        array $searchCriteriaParams = [],
         \Closure $callback = null
     ) {
-        $url = static::getApiUrl($resourcePath) . $id;
-        $sendData['headers'] = $sendData['headers'] ?? [];
-        $sendData['headers']['Authorization'] = 'Bearer ' . static::$apiToken;
+        $httpMethod = 'delete';
+        $url = static::getApiUrlByHttpMethod($httpMethod, $resourcePath, $searchCriteriaParams);
+        $requestData = [
+            'json' => [
+                'data' => $sendData
+            ]
+        ];
 
-        return static::_sendRequest($url, $sendData, $httpMethod, $callback);
+
+        return static::_sendRequest($url, $requestData, $httpMethod, $callback);
     }
 
     private static function _sendRequest($url, $sendData, $httpMethod, \Closure $callback = null)
@@ -124,9 +126,42 @@ trait ApiSdkTrait
             throw new \Exception('API request failed: ' . $e->getMessage());
         }
     }
-
-    private static function getApiUrl($resourcePath)
+    
+    private static function getApiUrlByHttpMethod($httpMethod, $resourcePath, array $searchCriteriaParams = [])
     {
-       return rtrim(static::$apiBaseUrl, '/') . '/' . trim($resourcePath, '/');
+        $searchCriteriaParams = array_filter($searchCriteriaParams, function($searchCriteriaParam) {
+            return !is_array($searchCriteriaParam);
+        });
+
+        switch (strtoupper($httpMethod)) {
+            case 'GET':
+            case 'DELETE':
+                return rtrim(static::$apiBaseUrl, '/') . '/' . trim($resourcePath, '/') . ($searchCriteriaParams ? '?' . http_build_query($searchCriteriaParams) : '');
+            case 'PUT':
+            case 'POST':
+                return rtrim(static::$apiBaseUrl, '/') . '/' . trim($resourcePath, '/');
+        }
+
+        throw new \Exception(sprintf('Http Method %s does not exists', $httpMethod));
+    }
+
+    /**
+     * @param array $requestData
+     * @param array $searchCriteriaParams
+     */
+    private static function _prepareSearchCriteriaRequestData(array &$requestData = [], array $searchCriteriaParams = [])
+    {
+        $searchCriteria = $searchCriteriaParams['search_criteria'] ?? [];
+        $columns = $searchCriteriaParams['columns'] ?? [];
+        $requestData['json'] = $requestData['json'] ?? [];
+        $requestData['json']['search_criteria'] = [];
+
+        if($searchCriteria) {
+            $requestData['json']['search_criteria']['criteria'] = $searchCriteriaParams;
+        }
+
+        if($columns) {
+            $requestData['json']['search_criteria']['columns'] = $searchCriteriaParams;
+        }
     }
 }

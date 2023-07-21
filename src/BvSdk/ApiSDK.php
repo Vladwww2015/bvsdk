@@ -10,25 +10,25 @@ use BVSDK\BvSdk\Exceptions\SDKInitException;
 
 class ApiSDK implements ApiSDKInterface
 {
-   use ApiSdkTrait;
+    use ApiSdkTrait;
 
-    public static function createResource($resourcePath, $data, $httpMethod = 'post', array $sendData = [], \Closure $callback = null)
+    public static function createResource($resourcePath, array $sendData = [], \Closure $callback = null)
     {
-        return self::create($resourcePath, $data, $httpMethod, $sendData, $callback);
+        return self::create($resourcePath, $sendData, $callback);
     }
 
-    public static function getResource($resourcePath, $id = '', $httpMethod = 'get', $sendData = [], \Closure $callback = null)
+    public static function getResource($resourcePath, array $searchCriteriaParams = [], \Closure $callback = null)
     {
-        return self::read($resourcePath, $id, $httpMethod, $sendData, $callback);
+        return self::read($resourcePath, $searchCriteriaParams, $callback);
     }
 
-    public static function updateResource($resourcePath, $data, $id = '', $httpMethod = 'put', array $sendData = [], \Closure $callback = null)
+    public static function updateResource($resourcePath, array $searchCriteriaParams = [], array $sendData = [], \Closure $callback = null)
     {
-        return self::update($resourcePath, $id, $data, $httpMethod, $sendData, $callback);
+        return self::update($resourcePath, $searchCriteriaParams, $sendData, $callback);
     }
 
-    public static function deleteResource($resourcePath, $id = '', $httpMethod = 'delete', array $sendData = [], \Closure $callback = null)
+    public static function deleteResource($resourcePath, array $searchCriteriaParams = [], \Closure $callback = null)
     {
-        return self::delete($resourcePath, $id, $httpMethod, $sendData, $callback);
+        return self::delete($resourcePath, $searchCriteriaParams, $callback);
     }
 }
