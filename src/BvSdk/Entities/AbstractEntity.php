@@ -21,15 +21,15 @@ abstract class AbstractEntity implements AttributeMapperInterface, EntityInterfa
     {
         $this->attributeMapper = $attributeMapper;
     }
-
-    public function mapToBV(EntityInterface $entity = null): array
+    
+    public function mapToApiApp(EntityInterface $entity = null): array
     {
-        return $this->attributeMapper->mapToBV($this);
+        return $this->attributeMapper->mapToApiApp($this);
     }
 
-    public function mapFromBV(EntityInterface $entity = null): array
+    public function mapFromApiApp(EntityInterface $entity = null): array
     {
-        return $this->attributeMapper->mapFromBV($this);
+        return $this->attributeMapper->mapFromApiApp($this);
     }
 
     public function setData(array $data)
