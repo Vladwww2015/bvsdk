@@ -1,8 +1,8 @@
 {
     "name": "vladwww2015/bvsdk",
-    "description": "PHP Library to work with custom api app(BV)",
+    "description": "PHP Library to work with custom API app (BV)",
     "type": "library",
-    "keywords": ["php","sdk","bv"],
+    "keywords": ["php", "sdk", "bv"],
     "authors": [
         {
             "name": "Vladislav Iurchenko"
@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=5.5",
-        "guzzlehttp/guzzle": "~5.3.3||~6.0||~7.0"
+        "guzzlehttp/guzzle": "~5.3.3 || ~6.0 || ~7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",
@@ -18,9 +18,9 @@
     },
     "autoload": {
         "psr-4": {
-            "BVSDK\\BvSdk\\": "src/BvSdk"
+            "BVSDK\\": "src/BvSdk"
         }
     },
-    "version": "v1.0.6",
+    "version": "v1.0.8",
     "minimum-stability": "dev"
 }
