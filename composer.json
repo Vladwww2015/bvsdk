@@ -9,18 +9,12 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
+        "php": ">=7.3",
         "guzzlehttp/guzzle": "~5.3.3 || ~6.0 || ~7.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^8",
-        "friendsofphp/php-cs-fixer": "^2"
     },
     "autoload": {
         "psr-4": {
             "BVSDK\\": "src/BvSdk"
         }
-    },
-    "version": "v1.0.8",
-    "minimum-stability": "dev"
+    }
 }
