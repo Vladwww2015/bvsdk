@@ -1,9 +1,7 @@
 <?php
 namespace BVSDK\BvSdk\Entities;
 
-use BVSDK\BvSdk\API\OrderAddressInterface;
+use BVSDK\BvSdk\API\InventoryCategoryInterface;
 
-class OrderAddress extends AbstractEntity implements OrderAddressInterface
-{
-
-}
+class InventoryCategory extends AbstractEntity implements InventoryCategoryInterface
+{}
