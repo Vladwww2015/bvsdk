@@ -14,7 +14,9 @@
     },
     "autoload": {
         "psr-4": {
-            "BVSDK\\": "src/BvSdk"
+            "BVSDK\\BvSdk\\": "src/BvSdk"
         }
-    }
+    },
+    "version": "v1.0.10",
+    "minimum-stability": "dev"
 }
