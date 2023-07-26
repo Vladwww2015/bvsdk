@@ -48,11 +48,11 @@ class OrderService extends BaseService
         $data = [];
 
         $data['order_detail'] = [];
-        $data['order_header'] = static::$_salesOrderHeader->mapToApiApp();
-        $data['order_address'] = static::$_orderAddress->mapToApiApp();
+        $data['order_header'] = static::$_salesOrderHeader->getData();
+        $data['order_address'] = static::$_orderAddress->getData();
 
         array_map(function($item) use (&$data) {
-            $data['order_detail'][] = $item->mapToApiApp();
+            $data['order_detail'][] = $item->getData();
         }, static::$_salesOrderDetails);
 
         $result = static::$apiSDK->createResource('create-order', $data);

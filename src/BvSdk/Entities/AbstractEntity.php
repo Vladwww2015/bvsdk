@@ -5,32 +5,12 @@ namespace BVSDK\BvSdk\Entities;
 use BVSDK\BvSdk\API\AttributeMapperInterface;
 use BVSDK\BvSdk\API\EntityInterface;
 
-abstract class AbstractEntity implements AttributeMapperInterface, EntityInterface
+abstract class AbstractEntity implements EntityInterface
 {
-    /**
-     * @var AttributeMapperInterface
-     */
-    protected $attributeMapper;
-
     /**
      * @var array
      */
     protected $_data = [];
-
-    public function __construct(AttributeMapperInterface $attributeMapper)
-    {
-        $this->attributeMapper = $attributeMapper;
-    }
-    
-    public function mapToApiApp(EntityInterface $entity = null): array
-    {
-        return $this->attributeMapper->mapToApiApp($this);
-    }
-
-    public function mapFromApiApp(EntityInterface $entity = null): array
-    {
-        return $this->attributeMapper->mapFromApiApp($this);
-    }
 
     public function setData(array $data)
     {

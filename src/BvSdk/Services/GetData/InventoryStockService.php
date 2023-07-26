@@ -22,7 +22,7 @@ class InventoryStockService extends BaseService
     public static function getInventoriesStock($limit = self::LIMIT, $offset = null, array $searchCriteria = [], array $columns = ['*'])
     {
         $searchCriteriaParams = [];
-        $searchCriteriaParams['offset'] = $offset;
+        $searchCriteriaParams['offset'] = (string) $offset;
         $searchCriteriaParams['limit'] = $limit;
         $searchCriteriaParams['columns'] = $columns;
         $searchCriteriaParams['search_criteria'] = $searchCriteria;

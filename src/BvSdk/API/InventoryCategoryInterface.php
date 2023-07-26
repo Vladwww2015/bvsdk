@@ -2,5 +2,5 @@
 
 namespace BVSDK\BvSdk\API;
 
-interface InventoryCategoryInterface extends AttributeMapperInterface, EntityInterface
+interface InventoryCategoryInterface extends EntityInterface
 {}

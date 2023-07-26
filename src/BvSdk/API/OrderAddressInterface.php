@@ -2,5 +2,5 @@
 
 namespace BVSDK\BvSdk\API;
 
-interface OrderAddressInterface extends AttributeMapperInterface, EntityInterface
+interface OrderAddressInterface extends  EntityInterface
 {}

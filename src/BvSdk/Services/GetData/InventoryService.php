@@ -15,18 +15,18 @@ class InventoryService extends BaseService
         $searchCriteriaParams['code'] = $code;
         $searchCriteriaParams['columns'] = $columns;
         $searchCriteriaParams['search_criteria'] = $searchCriteria;
-        
+
         return static::$apiSDK->getResource('inventory', $searchCriteriaParams);
     }
 
     public static function getInventories($limit = self::LIMIT, $offset = null, array $searchCriteria = [], array $columns = ['*'])
     {
         $searchCriteriaParams = [];
-        $searchCriteriaParams['offset'] = $offset;
+        $searchCriteriaParams['offset'] = (string) $offset;
         $searchCriteriaParams['limit'] = $limit;
         $searchCriteriaParams['columns'] = $columns;
         $searchCriteriaParams['search_criteria'] = $searchCriteria;
-        
+
         return static::$apiSDK->getResource('inventories', $searchCriteriaParams);
     }
 }

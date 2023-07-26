@@ -15,14 +15,14 @@ class InventoryPricingService extends BaseService
         $searchCriteriaParams['bvspecpricepartno'] = $partNo;
         $searchCriteriaParams['columns'] = $columns;
         $searchCriteriaParams['search_criteria'] = $searchCriteria;
-        
+
         return static::$apiSDK->getResource('inventory/pricing', $searchCriteriaParams);
     }
 
     public static function getInventoriesPricing($limit = self::LIMIT, $offset = null, array $searchCriteria = [], array $columns = ['*'])
     {
         $searchCriteriaParams = [];
-        $searchCriteriaParams['offset'] = $offset;
+        $searchCriteriaParams['offset'] = (string) $offset;
         $searchCriteriaParams['limit'] = $limit;
         $searchCriteriaParams['columns'] = $columns;
         $searchCriteriaParams['search_criteria'] = $searchCriteria;
