@@ -19,8 +19,12 @@ class InventoryService extends BaseService
         return static::$apiSDK->getResource('inventory', $searchCriteriaParams);
     }
 
-    public static function getInventories($limit = self::LIMIT, $offset = null, array $searchCriteria = [], array $columns = ['*'])
-    {
+    public static function getInventories(
+        $limit = self::LIMIT,
+        $offset = null,
+        array $searchCriteria = [],
+        array $columns = ['*']
+    ) {
         $searchCriteriaParams = [];
         $searchCriteriaParams['offset'] = (string) $offset;
         $searchCriteriaParams['limit'] = $limit;

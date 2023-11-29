@@ -16,7 +16,7 @@ class OrderService extends BaseService
 
     private static $_salesOrderHeader;
     private static $_salesOrderDetails = [];
-    private static $_orderAddress;
+    private static $_orderAddresses = [];
 
 
     public static function setSalesOrderHeader(SalesOrderHeaderInterface $salesOrderHeader)
@@ -33,23 +33,23 @@ class OrderService extends BaseService
         return self::$instance;
     }
 
-    public static function setOrderAddress(OrderAddressInterface $orderAddress)
+    public static function addOrderAddress(OrderAddressInterface $orderAddress)
     {
-        static::$_orderAddress = $orderAddress;
+        static::$_orderAddresses[] = $orderAddress;
 
         return self::$instance;
     }
 
     public static function create()
     {
-        if(!static::$_orderAddress || !static::$_salesOrderHeader || !static::$_salesOrderDetails) {
+        if(!static::$_orderAddresses || !static::$_salesOrderHeader || !static::$_salesOrderDetails) {
             throw new SDKInitException('Incorrect data. Please check data for order address, order header and order details');
         }
         $data = [];
 
         $data['order_detail'] = [];
         $data['order_header'] = static::$_salesOrderHeader->getData();
-        $data['order_address'] = static::$_orderAddress->getData();
+        $data['order_address'] = static::$_orderAddresses->getData();
 
         array_map(function($item) use (&$data) {
             $data['order_detail'][] = $item->getData();
@@ -70,8 +70,7 @@ class OrderService extends BaseService
     private static function resetData()
     {
         static::$_salesOrderHeader = null;
-        static::$_orderAddress = null;
+        static::$_orderAddresses = [];
         static::$_salesOrderDetails = [];
     }
-
 }
